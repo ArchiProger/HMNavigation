@@ -8,12 +8,12 @@
 import SwiftUI
 import NavigationTabBar
 
-final class SheetViewModel: ObservableObject {
+final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, ObservableObject {
     var type: SheetDisplayType = .default
     var dismissActionStatus: SheetDismissActionStatus = .enable
     var presentationPreferences: [((UISheetPresentationController?) -> Void)] = []
     
-    @Published private(set) var sheetActive = false
+    @Published private(set) var sheetActive = false            
     
     private var rootViewController: UIViewController? {
         let adapter = WindowsAdapter.shared
@@ -25,23 +25,38 @@ final class SheetViewModel: ObservableObject {
     }
     
     // MARK: - Management of the bottom sheet
-    func present(@ViewBuilder content: () -> some View) {
+    func present(configuration: SheetControllersViewModel, @ViewBuilder content: () -> some View) {
         let controller = UIHostingController(rootView: content())
         controller.view.backgroundColor = .clear
         controller.isModalInPresentation = dismissActionStatus != .enable
+        controller.sheetPresentationController?.delegate = self
         
         presentationPreferences.forEach { preference in
             preference(controller.sheetPresentationController)
         }
+        
+        let root = configuration.presentationControllersStack.last ?? rootViewController
                         
-        rootViewController?.present(controller, animated: true) {
+        root?.present(controller, animated: true) {
+            configuration.presentationControllersStack.append(controller)
             self.sheetActive = true
         }
     }
     
-    func dismiss() {
-        rootViewController?.dismiss(animated: true) {
+    func dismiss(configuration: SheetControllersViewModel) {
+        let root = configuration.presentationControllersStack.last ?? rootViewController
+        
+        root?.dismiss(animated: true) {
             self.sheetActive = false
+            
+            if !configuration.presentationControllersStack.isEmpty {
+                configuration.presentationControllersStack.removeLast()
+            }
         }
+    }
+    
+    // MARK: - Bottom sheet delegate methods
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        sheetActive = false
     }
 }

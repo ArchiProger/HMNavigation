@@ -20,37 +20,42 @@ public struct SheetView<Content: View, SheetContent: View>: View {
     var content: Content
     @ViewBuilder var sheetContent: () -> SheetContent
     
-    var onAppear: () -> Void = {  }
     var backgroundColor: AnyShapeStyle = .init(Material.thick)
     var backgroundContent: AnyView = .init(EmptyView())
     
     @ObservedObject private var sheetModel = SheetViewModel()
     
+    @Environment(\.sheetController) var controller
     @Environment(\.self) var environments
     
     public var body: some View {
         content
-            .onAppear {
-                onAppear()
-            }
             .background {
                 Color.clear
                     .onChange(of: sheetActive) { active in
                         guard active != sheetModel.sheetActive else { return }
                         
+                        let isRootView = controller.presentationControllersStack.isEmpty
+                        let configuration = isRootView ? .init() : controller
+                        
                         if active {
-                            sheetModel.present {
+                            sheetModel.present(configuration: configuration) {
                                 sheetContent()
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                                     .background(backgroundColor)
                                     .background(backgroundContent)
-                                    .environmentObject(sheetModel)
-                                    .environment(\.sheetDismiss, sheetModel.dismiss)
+                                    .environment(\.sheetDismiss, { sheetModel.dismiss(configuration: configuration) })
+                                    .environment(\.sheetController, configuration)
                                     .environment(\.self, environments)
                             }
                         } else {
-                            sheetModel.dismiss()
+                            sheetModel.dismiss(configuration: configuration)
                         }
+                    }
+                    .onReceive(sheetModel.$sheetActive) { active in
+                        guard active != sheetActive else { return }
+                        
+                        sheetActive = active
                     }
             }
     }

@@ -10,14 +10,12 @@ import NavigationSheet
 
 struct ContentView: View {
     @State var sheet = false
-    @State var active: Screen = .home 
-                    
+    @State var active: Screen = .home
+    
     var body: some View {
         TabView(selection: $active) {
-            Button("Show sheet") {
-                sheet = true
-            }
-            .tag(Screen.home)
+            SheetsView()
+                .tag(Screen.home)
             
             DetailView()
                 .tag(Screen.detail)
@@ -25,20 +23,6 @@ struct ContentView: View {
         .placeCustomTabBar(placement: .bottom) {
             TabBar()
         }
-        .bottomSheet(sheetActive: $sheet) {
-            CloseButton()
-        }
-        .sheetDisplayType(type: .navigation)
-        .sheetDetents(detents: [.medium(), .large()])
-        .sheetPreferredCornerRadius(radius: 25)
-        .sheetPrefersGrabberVisible(visible: true)
-        .sheetBackground(Color.clear)
-        .sheetBackground {
-            Color.brown
-                .opacity(0.8)
-                .blur(radius: 100)
-        }
-        .sheetDismissAction(.disable)
     }
     
     @ViewBuilder

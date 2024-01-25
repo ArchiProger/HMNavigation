@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		7524BA862B6004A300AF1A97 /* NavigationSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 7524BA852B6004A300AF1A97 /* NavigationSheet */; };
 		7524BA882B6004A300AF1A97 /* NavigationTabBar in Frameworks */ = {isa = PBXBuildFile; productRef = 7524BA872B6004A300AF1A97 /* NavigationTabBar */; };
+		756080872B628C1500818EEB /* SheetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756080862B628C1500818EEB /* SheetsView.swift */; };
 		75AC3B072B60058E0083012A /* NavigationSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 75AC3B062B60058E0083012A /* NavigationSheet */; };
 		75AC3B092B60058E0083012A /* NavigationTabBar in Frameworks */ = {isa = PBXBuildFile; productRef = 75AC3B082B60058E0083012A /* NavigationTabBar */; };
 		75AC3B0D2B6016DF0083012A /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75AC3B0C2B6016DF0083012A /* CloseButton.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		756080862B628C1500818EEB /* SheetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsView.swift; sourceTree = "<group>"; };
 		75AC3B0A2B6008450083012A /* UISheetPresentationControllerDetent+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UISheetPresentationControllerDetent+Private.h"; sourceTree = "<group>"; };
 		75AC3B0C2B6016DF0083012A /* CloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButton.swift; sourceTree = "<group>"; };
 		75D382052B5E8853003E2BA1 /* HMNavigationDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HMNavigationDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +60,7 @@
 			children = (
 				75D3820A2B5E8853003E2BA1 /* ContentView.swift */,
 				75AC3B0C2B6016DF0083012A /* CloseButton.swift */,
+				756080862B628C1500818EEB /* SheetsView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -190,6 +193,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				756080872B628C1500818EEB /* SheetsView.swift in Sources */,
 				75D3820B2B5E8853003E2BA1 /* ContentView.swift in Sources */,
 				75D382092B5E8853003E2BA1 /* NavigationSheetDemoApp.swift in Sources */,
 				75AC3B0D2B6016DF0083012A /* CloseButton.swift in Sources */,
