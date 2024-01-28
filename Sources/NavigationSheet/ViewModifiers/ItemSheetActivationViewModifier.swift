@@ -19,11 +19,9 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
         content
             .background {
                 Color.clear
+                    .onAppear(perform: onCreate)
                     .onChange(of: item) { [item] newState in
                         guard item != newState else { return }
-                        
-                        let isRootView = controller.presentationControllersStack.isEmpty
-                        let configuration = isRootView ? .init() : controller
                         
                         if let item = newState, sheetModel.sheetActive {
                             sheetModel.dismiss(configuration: configuration, shouldChangeNavigationStack: false)
@@ -34,11 +32,33 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
                             sheetModel.dismiss(configuration: configuration)
                         }
                     }
-                    .onReceive(sheetModel.$sheetActive) { active in
+                    .onReceive(
+                        sheetModel.$sheetActive
+                            .dropFirst()
+                            .receive(on: RunLoop.main)
+                            .removeDuplicates()
+                    ) { active in
                         guard !active else { return }
                         
                         item = nil
                     }
             }
+    }
+    
+    // MARK: - Sheet settings
+    private var isRootView: Bool {
+        controller.presentationControllersStack.isEmpty
+    }
+    
+    private var configuration: SheetControllersViewModel {
+        isRootView ? .init() : controller
+    }
+    
+    private func onCreate() {
+        guard let item = item else { return }
+        
+        sheetModel.present(configuration: configuration, environments: environments) {
+            content(item)
+        }
     }
 }

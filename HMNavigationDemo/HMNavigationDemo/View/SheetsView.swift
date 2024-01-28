@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SheetsView: View {
     
-    @State var sheet: SheetTab? = nil
+    @State var sheet: SheetTab? = .green
     
     enum SheetTab: String, CaseIterable {
         case blue, green, purple, brown

@@ -20,6 +20,9 @@ struct ContentView: View {
             SheetsView()
                 .tag(Screen.sheets)
             
+            ContentChangingView()
+                .tag(Screen.content)
+            
             DetailView()
                 .tag(Screen.detail)
         }

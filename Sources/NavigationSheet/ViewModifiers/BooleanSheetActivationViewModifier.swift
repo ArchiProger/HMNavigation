@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Archibbald on 27.01.2024.
 //
@@ -20,11 +20,9 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
         content
             .background {
                 Color.clear
+                    .onAppear(perform: onCreate)
                     .onChange(of: sheetActive) { active in
                         guard active != sheetModel.sheetActive else { return }
-                        
-                        let isRootView = controller.presentationControllersStack.isEmpty
-                        let configuration = isRootView ? .init() : controller
                         
                         if active {
                             sheetModel.present(configuration: configuration, environments: environments, content: self.content)
@@ -32,11 +30,31 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
                             sheetModel.dismiss(configuration: configuration)
                         }
                     }
-                    .onReceive(sheetModel.$sheetActive) { active in
+                    .onReceive(
+                        sheetModel.$sheetActive
+                            .dropFirst()
+                            .receive(on: RunLoop.main)
+                            .removeDuplicates()
+                    ) { active in
                         guard active != sheetActive else { return }
                         
                         sheetActive = active
                     }
             }
-    }        
+    }
+    
+    // MARK: - Sheet settings
+    private var isRootView: Bool {
+        controller.presentationControllersStack.isEmpty
+    }
+    
+    private var configuration: SheetControllersViewModel {
+        isRootView ? .init() : controller
+    }
+    
+    private func onCreate() {
+        guard sheetActive else { return }
+        
+        sheetModel.present(configuration: configuration, environments: environments, content: content)
+    }
 }
