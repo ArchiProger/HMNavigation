@@ -9,13 +9,15 @@ import Foundation
 import SwiftUI
 
 enum Screen: String, CaseIterable {
-    case home = "Home"
+    case tree = "Sheets Tree"
+    case sheets = "Sheets"
     case detail = "Detail"
     
     var icon: Image {
         switch self {
-            case .home: return Image(systemName: "house.fill")
-            case .detail: return Image(systemName: "globe")
+            case .tree: return Image(systemName: "tree.fill")
+            case .detail: return Image(systemName: "scroll.fill")
+            case .sheets: return Image(systemName: "platter.filled.bottom.and.arrow.down.iphone")
         }
     }
 }

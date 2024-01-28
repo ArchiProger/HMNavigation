@@ -2,42 +2,45 @@
 //  SheetsView.swift
 //  HMNavigationDemo
 //
-//  Created by Archibbald on 25.01.2024.
+//  Created by Archibbald on 28.01.2024.
 //
 
 import SwiftUI
-import NavigationSheet
 
 struct SheetsView: View {
-    @State var blueSheetActive = false
-    @State var redSheetActive = false
-    @State var pinkSheetActive = false
+    
+    @State var sheet: SheetTab? = nil
+    
+    enum SheetTab: String, CaseIterable {
+        case blue, green, purple, brown
+        
+        var color: Color {
+            switch self {
+                case .blue: return .blue
+                case .green: return .green
+                case .purple: return .purple
+                case .brown: return .brown
+            }
+        }
+    }
     
     var body: some View {
         VStack {
-            Button("Show blue sheet") {
-                blueSheetActive.toggle()
-            }
-        }
-        .bottomSheet(sheetActive: $blueSheetActive) {
-            Button("Show red sheet") {
-                redSheetActive.toggle()
-            }
-            .tint(.red)
-            .bottomSheet(sheetActive: $redSheetActive) {
-                Button("Show pink sheet") {
-                    pinkSheetActive.toggle()
+            ForEach(SheetTab.allCases, id: \.self) { sheet in
+                Button("Show \(sheet.rawValue)") {
+                    self.sheet = sheet
                 }
-                .bottomSheet(sheetActive: $pinkSheetActive) {
-                    CloseButton()
-                }
-                .sheetBackground(Color.pink)
-                .sheetDismissAction(.disable)
+                .tint(sheet.color)
             }
-            .sheetBackground(Color.red)
-            .sheetDetents(detents: [.medium()])
+            
+            Spacer()
         }
-        .sheetBackground(Color.blue)
+        .bottomSheet(item: $sheet) { sheet in
+            sheet.color.ignoresSafeArea()
+        }
+        .sheetBackgroundInteraction(.medium)
+        .sheetDetents(detents: [.medium()])
+        .sheetPrefersGrabberVisible(visible: true)
     }
 }
 

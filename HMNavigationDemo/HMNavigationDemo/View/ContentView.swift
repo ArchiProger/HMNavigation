@@ -10,12 +10,15 @@ import NavigationSheet
 
 struct ContentView: View {
     @State var sheet = false
-    @State var active: Screen = .home
+    @State var active: Screen = .tree
     
     var body: some View {
         TabView(selection: $active) {
+            SheetsTreeView()
+                .tag(Screen.tree)
+            
             SheetsView()
-                .tag(Screen.home)
+                .tag(Screen.sheets)
             
             DetailView()
                 .tag(Screen.detail)

@@ -12,6 +12,8 @@ final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, Obs
     var type: SheetDisplayType = .default
     var dismissActionStatus: SheetDismissActionStatus = .enable
     var presentationPreferences: [((UISheetPresentationController?) -> Void)] = []
+    var backgroundColor: AnyShapeStyle = .init(Material.thick)
+    var backgroundContent: AnyView = .init(EmptyView())
     
     @Published private(set) var sheetActive = false            
     
@@ -25,11 +27,19 @@ final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, Obs
     }
     
     // MARK: - Management of the bottom sheet
-    func present(configuration: SheetControllersViewModel, @ViewBuilder content: () -> some View) {
-        let controller = UIHostingController(rootView: content())
+    func present(configuration: SheetControllersViewModel, environments: EnvironmentValues, @ViewBuilder content: () -> some View) {
+        let controller = UIHostingController(
+            rootView: content()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(backgroundColor)
+                .background(backgroundContent)
+                .environment(\.sheetDismiss, { self.dismiss(configuration: configuration) })
+                .environment(\.sheetController, configuration)
+                .environment(\.self, environments)
+        )
         controller.view.backgroundColor = .clear
         controller.isModalInPresentation = dismissActionStatus != .enable
-        controller.sheetPresentationController?.delegate = self
+        controller.sheetPresentationController?.delegate = self        
         
         presentationPreferences.forEach { preference in
             preference(controller.sheetPresentationController)

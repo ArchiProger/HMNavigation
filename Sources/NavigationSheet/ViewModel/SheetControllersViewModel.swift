@@ -8,6 +8,5 @@
 import SwiftUI
 
 final class SheetControllersViewModel: ObservableObject {
-    
     @Published var presentationControllersStack: [UIViewController] = []
 }
