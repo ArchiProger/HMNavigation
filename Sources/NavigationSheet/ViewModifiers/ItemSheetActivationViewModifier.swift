@@ -25,10 +25,10 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
                         let isRootView = controller.presentationControllersStack.isEmpty
                         let configuration = isRootView ? .init() : controller
                         
-                        if let item = item, sheetModel.sheetActive {
-                            sheetModel.dismiss(configuration: configuration)
+                        if let item = newState, sheetModel.sheetActive {
+                            sheetModel.dismiss(configuration: configuration, shouldChangeNavigationStack: false)
                             sheetModel.present(configuration: configuration, environments: environments) { self.content(item) }
-                        } else if let item = item, !sheetModel.sheetActive {
+                        } else if let item = newState, !sheetModel.sheetActive {
                             sheetModel.present(configuration: configuration, environments: environments) { self.content(item) }
                         } else {
                             sheetModel.dismiss(configuration: configuration)

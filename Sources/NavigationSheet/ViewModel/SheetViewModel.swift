@@ -53,10 +53,12 @@ final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, Obs
         }
     }
     
-    func dismiss(configuration: SheetControllersViewModel) {
+    func dismiss(configuration: SheetControllersViewModel, shouldChangeNavigationStack: Bool = true) {
         let root = configuration.presentationControllersStack.last ?? rootViewController
         
         root?.dismiss(animated: true) {
+            guard shouldChangeNavigationStack else { return }
+            
             self.sheetActive = false
             
             if !configuration.presentationControllersStack.isEmpty {

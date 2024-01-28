@@ -26,6 +26,11 @@ struct SheetsView: View {
     
     var body: some View {
         VStack {
+            Button("Close all") {
+                sheet = nil
+            }
+            .tint(.orange)
+            
             ForEach(SheetTab.allCases, id: \.self) { sheet in
                 Button("Show \(sheet.rawValue)") {
                     self.sheet = sheet

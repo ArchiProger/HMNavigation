@@ -36,6 +36,7 @@ struct ContentView: View {
                     screen.icon
                     
                     Text(screen.rawValue)
+                        .font(.footnote)
                 }
                 .frame(maxWidth: .infinity)
                 .onTapGesture {
