@@ -39,7 +39,7 @@ final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, Obs
         )
         controller.view.backgroundColor = .clear
         controller.isModalInPresentation = dismissActionStatus != .enable
-        controller.sheetPresentationController?.delegate = self        
+        controller.sheetPresentationController?.delegate = self          
         
         presentationPreferences.forEach { preference in
             preference(controller.sheetPresentationController)

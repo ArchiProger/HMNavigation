@@ -14,7 +14,7 @@ private struct TabBarSize: EnvironmentKey {
 
 // ## Introduce new value to EnvironmentValues
 extension EnvironmentValues {
-    var tabBarSize: CGSize {
+    public var tabBarSize: CGSize {
         get { self[TabBarSize.self] }
         set { self[TabBarSize.self] = newValue }
     }
