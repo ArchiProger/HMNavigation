@@ -12,6 +12,7 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
     @ViewBuilder var content: (Item) -> SheetContent
     
     @EnvironmentObject var sheetModel: SheetViewModel
+    @EnvironmentObject var configModel: ConfigurationViewModel
     @Environment(\.sheetController) var controller
     @Environment(\.self) var environments
     
@@ -24,12 +25,27 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
                         guard item != newState else { return }
                         
                         if let item = newState, sheetModel.sheetActive {
-                            sheetModel.dismiss(configuration: configuration, shouldChangeNavigationStack: false)
-                            sheetModel.present(configuration: configuration, environments: environments) { self.content(item) }
+                            sheetModel.dismiss(stack: stack,
+                                               configuration: configModel,
+                                               shouldChangeNavigationStack: false
+                            )
+                            sheetModel.present(stack: stack,
+                                               configuration: configModel,
+                                               environments: environments
+                            ) {
+                                self.content(item)
+                            }
                         } else if let item = newState, !sheetModel.sheetActive {
-                            sheetModel.present(configuration: configuration, environments: environments) { self.content(item) }
+                            sheetModel.present(stack: stack,
+                                               configuration: configModel,
+                                               environments: environments
+                            ) {
+                                self.content(item)
+                            }
                         } else {
-                            sheetModel.dismiss(configuration: configuration)
+                            sheetModel.dismiss(stack: stack,
+                                               configuration: configModel
+                            )
                         }
                     }
                     .onReceive(
@@ -50,14 +66,14 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
         controller.presentationControllersStack.isEmpty
     }
     
-    private var configuration: SheetControllersViewModel {
+    private var stack: SheetControllersViewModel {
         isRootView ? .init() : controller
     }
     
     private func onCreate() {
         guard let item = item else { return }
         
-        sheetModel.present(configuration: configuration, environments: environments) {
+        sheetModel.present(stack: stack, configuration: configModel, environments: environments) {
             content(item)
         }
     }

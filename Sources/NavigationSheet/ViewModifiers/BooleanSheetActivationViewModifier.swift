@@ -13,6 +13,7 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
     @ViewBuilder var content: () -> SheetContent
     
     @EnvironmentObject var sheetModel: SheetViewModel
+    @EnvironmentObject var configModel: ConfigurationViewModel
     @Environment(\.sheetController) var controller
     @Environment(\.self) var environments
     
@@ -25,9 +26,15 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
                         guard active != sheetModel.sheetActive else { return }
                         
                         if active {
-                            sheetModel.present(configuration: configuration, environments: environments, content: self.content)
+                            sheetModel.present(stack: stack,
+                                               configuration: configModel,
+                                               environments: environments,
+                                               content: self.content
+                            )
                         } else {
-                            sheetModel.dismiss(configuration: configuration)
+                            sheetModel.dismiss(stack: stack,
+                                               configuration: configModel
+                            )
                         }
                     }
                     .onReceive(
@@ -48,13 +55,13 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
         controller.presentationControllersStack.isEmpty
     }
     
-    private var configuration: SheetControllersViewModel {
+    private var stack: SheetControllersViewModel {
         isRootView ? .init() : controller
     }
     
     private func onCreate() {
         guard sheetActive else { return }
         
-        sheetModel.present(configuration: configuration, environments: environments, content: content)
+        sheetModel.present(stack: stack, configuration: configModel, environments: environments, content: content)
     }
 }

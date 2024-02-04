@@ -9,60 +9,52 @@ import SwiftUI
 import NavigationTabBar
 
 final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, ObservableObject {
-    var type: SheetDisplayType = .default
-    var dismissActionStatus: SheetDismissActionStatus = .enable
-    var presentationPreferences: [((UISheetPresentationController?) -> Void)] = []
-    var backgroundColor: AnyShapeStyle = .init(Material.thick)
-    var backgroundContent: AnyView = .init(EmptyView())
-    
-    @Published private(set) var sheetActive = false            
-    
-    private var rootViewController: UIViewController? {
-        let adapter = WindowsAdapter.shared
-        
-        switch type {
-            case .default: return adapter.tabBar?.rootViewController
-            case .navigation: return adapter.main?.rootViewController
-        }
-    }
+    @Published var sheetActive = false
     
     // MARK: - Management of the bottom sheet
-    func present(configuration: SheetControllersViewModel, environments: EnvironmentValues, @ViewBuilder content: () -> some View) {
+    func present(stack: SheetControllersViewModel,
+                 configuration: ConfigurationViewModel,
+                 environments: EnvironmentValues,
+                 @ViewBuilder content: () -> some View
+    ) {
         let controller = UIHostingController(
             rootView: content()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(backgroundColor)
-                .background(backgroundContent)
-                .environment(\.sheetDismiss, { self.dismiss(configuration: configuration) })
-                .environment(\.sheetController, configuration)
+                .background(configuration.backgroundColor)
+                .background(configuration.backgroundContent)
+                .environment(\.sheetDismiss, { self.dismiss(stack: stack, configuration: configuration) })
+                .environment(\.sheetController, stack)
                 .environment(\.self, environments)
         )
         controller.view.backgroundColor = .clear
-        controller.isModalInPresentation = dismissActionStatus != .enable
-        controller.sheetPresentationController?.delegate = self          
+        controller.isModalInPresentation = configuration.dismissActionStatus != .enable
+        controller.sheetPresentationController?.delegate = self
         
-        presentationPreferences.forEach { preference in
+        configuration.presentationPreferences.forEach { preference in
             preference(controller.sheetPresentationController)
         }
         
-        let root = configuration.presentationControllersStack.last ?? rootViewController
+        let root = stack.presentationControllersStack.last ?? configuration.rootViewController
                         
         root?.present(controller, animated: true) {
-            configuration.presentationControllersStack.append(controller)
+            stack.presentationControllersStack.append(controller)
             self.sheetActive = true
         }
     }
     
-    func dismiss(configuration: SheetControllersViewModel, shouldChangeNavigationStack: Bool = true) {
-        let root = configuration.presentationControllersStack.last ?? rootViewController
+    func dismiss(stack: SheetControllersViewModel,
+                 configuration: ConfigurationViewModel,
+                 shouldChangeNavigationStack: Bool = true
+    ) {
+        let root = stack.presentationControllersStack.last ?? configuration.rootViewController
         
         root?.dismiss(animated: true) {
             guard shouldChangeNavigationStack else { return }
             
             self.sheetActive = false
             
-            if !configuration.presentationControllersStack.isEmpty {
-                configuration.presentationControllersStack.removeLast()
+            if !stack.presentationControllersStack.isEmpty {
+                stack.presentationControllersStack.removeLast()
             }
         }
     }
