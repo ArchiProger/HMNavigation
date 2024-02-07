@@ -17,7 +17,7 @@ final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, Obs
                  environments: EnvironmentValues,
                  @ViewBuilder content: () -> some View
     ) {
-        let controller = UIHostingController(
+        let controller = UISheetHostingController(            
             rootView: content()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(configuration.backgroundColor)
@@ -25,7 +25,8 @@ final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, Obs
                 .environment(\.sheetDismiss, { self.dismiss(stack: stack, configuration: configuration) })
                 .environment(\.sheetController, stack)
                 .environment(\.self, environments)
-        )
+        )        
+        controller.shadow = configuration.shadow == .default ? nil : configuration.shadow
         controller.view.backgroundColor = .clear
         controller.isModalInPresentation = configuration.dismissActionStatus != .enable
         controller.sheetPresentationController?.delegate = self

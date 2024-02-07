@@ -95,4 +95,26 @@ public struct SheetView<Content: View, Modifier: ViewModifier>: View {
         
         return self
     }
+    
+    /// Configures the shadow for a SwiftUI sheet presentation.
+    /// - Parameters:
+    ///   - color: The color of the shadow. Defaults to nil.
+    ///   - radius: The radius of the shadow. Defaults to 3.
+    ///   - offset: The offset of the shadow. Defaults to CGSize(width: 0, height: -3).
+    ///   - path: The path of the shadow. Defaults to nil.    
+    public func sheetShadow(color: Color? = nil,
+                            radius: CGFloat = 3,
+                            offset: CGSize = .init(width: 0, height: -3),
+                            path: CGPath? = nil
+    ) -> Self {
+        if let color = color {
+            configModel.shadow.color = UIColor(color).cgColor
+        }
+        
+        configModel.shadow.radius = radius
+        configModel.shadow.offset = offset
+        configModel.shadow.path = path        
+        
+        return self
+    }
 }

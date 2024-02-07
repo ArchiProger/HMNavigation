@@ -46,6 +46,7 @@ struct SheetsView: View {
         .sheetBackgroundInteraction(.medium)
         .sheetDetents(detents: [.medium()])
         .sheetPrefersGrabberVisible(visible: true)
+        .sheetShadow(color: Color.orange, radius: 20)
     }
 }
 
