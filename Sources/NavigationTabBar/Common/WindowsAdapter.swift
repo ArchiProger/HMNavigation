@@ -20,9 +20,10 @@ public final class WindowsAdapter {
         guard let scene = UIApplication.shared.connectedScenes.first,
               let windowScene = scene as? UIWindowScene
         else { return }
-        
+                        
         main = windowScene.windows.first
         tabBar = PassThroughWindow(windowScene: windowScene)
+        tabBar?.rootViewController = UIViewController()
     }
     
     // MARK: - TabBar placing

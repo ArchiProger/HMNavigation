@@ -14,7 +14,7 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
     @EnvironmentObject var sheetModel: SheetViewModel
     @EnvironmentObject var configModel: ConfigurationViewModel
     
-    @Environment(\.sheetController) var controller
+    @Environment(\.hostingController) var controller
     @Environment(\.self) var environments
     
     public func body(content: Content) -> some View {
@@ -25,7 +25,7 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
                     .onChange(of: item) { [item] newState in
                         guard item != newState else { return }
                         
-                        sheetModel.stack = stack
+                        sheetModel.controller = controller ?? configModel.rootViewController
                         sheetModel.configuration = configModel
                         sheetModel.environments = environments
                         
@@ -53,19 +53,11 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
             }
     }
     
-    // MARK: - Sheet settings
-    private var isRootView: Bool {
-        controller.presentationControllersStack.isEmpty
-    }
-    
-    private var stack: SheetControllersViewModel {
-        isRootView ? .init() : controller
-    }
-    
+    // MARK: - Sheet settings        
     private func onCreate() {
         guard let item = item else { return }
         
-        sheetModel.stack = stack
+        sheetModel.controller = controller ?? configModel.rootViewController
         sheetModel.configuration = configModel
         sheetModel.environments = environments
         sheetModel.present {

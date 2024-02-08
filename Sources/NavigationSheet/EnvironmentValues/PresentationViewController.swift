@@ -6,16 +6,17 @@
 //
 
 import SwiftUI
+import NavigationTabBar
 
 // Create an environment key
-private struct PresentationViewController: EnvironmentKey {
-    static let defaultValue: SheetControllersViewModel = .init()
+private struct HostingViewController: EnvironmentKey {
+    static let defaultValue: UIViewController? = nil
 }
 
 // ## Introduce new value to EnvironmentValues
 extension EnvironmentValues {
-    var sheetController: SheetControllersViewModel {
-        get { self[PresentationViewController.self] }
-        set { self[PresentationViewController.self] = newValue }
+    var hostingController: UIViewController? {
+        get { self[HostingViewController.self] }
+        set { self[HostingViewController.self] = newValue }
     }
 }

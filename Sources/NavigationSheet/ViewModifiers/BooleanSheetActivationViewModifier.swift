@@ -15,7 +15,7 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
     @EnvironmentObject var sheetModel: SheetViewModel
     @EnvironmentObject var configModel: ConfigurationViewModel
     
-    @Environment(\.sheetController) var controller
+    @Environment(\.hostingController) var controller
     @Environment(\.self) var environments
     
     public func body(content: Content) -> some View {
@@ -26,8 +26,8 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
                     .onChange(of: sheetActive) { active in
                         guard active != sheetModel.sheetActive else { return }
                         
-                        sheetModel.stack = stack
-                        sheetModel.configuration = configModel    
+                        sheetModel.controller = controller ?? configModel.rootViewController
+                        sheetModel.configuration = configModel
                         sheetModel.environments = environments
                         
                         if active {
@@ -49,19 +49,11 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
             }            
     }
     
-    // MARK: - Sheet settings
-    private var isRootView: Bool {
-        controller.presentationControllersStack.isEmpty
-    }
-    
-    private var stack: SheetControllersViewModel {
-        isRootView ? .init() : controller
-    }
-    
+    // MARK: - Sheet settings    
     private func onCreate() {
         guard sheetActive else { return }
         
-        sheetModel.stack = stack
+        sheetModel.controller = controller ?? configModel.rootViewController
         sheetModel.configuration = configModel        
         sheetModel.present(content: content)
     }

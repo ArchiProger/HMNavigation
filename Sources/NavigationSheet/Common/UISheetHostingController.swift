@@ -10,15 +10,15 @@ import SwiftUI
 final class UISheetHostingController<Content: View>: UIHostingController<AnyView> {
     var shadow: UIShadow?
     var environments: EnvironmentValues = .init()
-    var swiftUIView: () -> Content
+    var content: Content!
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError()
+        super.init(coder: aDecoder)
     }
     
-    init(@ViewBuilder rootView: @escaping () -> Content) {
-        self.swiftUIView = rootView
-        super.init(rootView: AnyView(EmptyView()))
+    init(rootView: Content) {
+        self.content = rootView
+        super.init(rootView: AnyView(rootView))
     }
     
     override func viewDidLoad() {
@@ -58,8 +58,9 @@ final class UISheetHostingController<Content: View>: UIHostingController<AnyView
         }
         
         rootView = .init(
-            swiftUIView()
+            content
                 .environment(\.colorScheme, swiftUIScheme)
+                .environment(\.hostingController, self)
                 .environment(\.self, environments)
         )
     }

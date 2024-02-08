@@ -10,20 +10,19 @@ import NavigationTabBar
 
 final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, ObservableObject {
     @Published var sheetActive = false
-    @Published var stack = SheetControllersViewModel()
+    @Published var controller: UIViewController? = nil
     @Published var configuration = ConfigurationViewModel()
     @Published var environments = EnvironmentValues()
     
     // MARK: - Management of the bottom sheet
     func present(@ViewBuilder content: @escaping () -> some View) {
-        let controller = UISheetHostingController {
-            content()
+        let controller = UISheetHostingController(
+            rootView: content()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(self.configuration.backgroundColor)
                 .background(self.configuration.backgroundContent)
-                .environment(\.sheetDismiss, { self.dismiss() })
-                .environment(\.sheetController, self.stack)
-        }
+                .environment(\.sheetDismiss, { self.dismiss() })                
+        )
         controller.environments = environments
         controller.shadow = configuration.shadow == .default ? nil : configuration.shadow
         controller.view.backgroundColor = .clear
@@ -33,34 +32,22 @@ final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, Obs
         configuration.presentationPreferences.forEach { preference in
             preference(controller.sheetPresentationController)
         }
-        
-        let root = stack.presentationControllersStack.last ?? configuration.rootViewController
-        root?.present(controller, animated: true) {
-            self.stack.presentationControllersStack.append(controller)
+                
+        self.controller?.present(controller, animated: true) {
             self.sheetActive = true
         }
     }
     
     func dismiss(shouldChangeNavigationStack: Bool = true) {
-        let root = stack.presentationControllersStack.last ?? configuration.rootViewController
-        
-        root?.dismiss(animated: true) {
+        controller?.dismiss(animated: true) {
             guard shouldChangeNavigationStack else { return }
             
             self.sheetActive = false
-            
-            if !self.stack.presentationControllersStack.isEmpty {
-                self.stack.presentationControllersStack.removeLast()
-            }
         }
     }
     
     // MARK: - Bottom sheet delegate methods
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         sheetActive = false
-        
-        if !stack.presentationControllersStack.isEmpty {
-            stack.presentationControllersStack.removeLast()
-        }
     }
 }
