@@ -8,13 +8,24 @@
 import SwiftUI
 import NavigationTabBar
 
+struct ColorSchemeToggle: ViewModifier {
+    
+    @Environment(\.colorScheme) var scheme
+    
+    func body(content: Content) -> some View {
+        content
+            .onChange(of: scheme) { _ in
+                print(scheme)
+            }
+    }
+}
+
 final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, ObservableObject {
     @Published var sheetActive = false
     
     // MARK: - Management of the bottom sheet
     func present(stack: SheetControllersViewModel,
-                 configuration: ConfigurationViewModel,
-                 environments: EnvironmentValues,
+                 configuration: ConfigurationViewModel,                 
                  @ViewBuilder content: () -> some View
     ) {
         let controller = UISheetHostingController(            
@@ -23,9 +34,8 @@ final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, Obs
                 .background(configuration.backgroundColor)
                 .background(configuration.backgroundContent)
                 .environment(\.sheetDismiss, { self.dismiss(stack: stack, configuration: configuration) })
-                .environment(\.sheetController, stack)
-                .environment(\.self, environments)
-        )        
+                .environment(\.sheetController, stack)                          
+        )
         controller.shadow = configuration.shadow == .default ? nil : configuration.shadow
         controller.view.backgroundColor = .clear
         controller.isModalInPresentation = configuration.dismissActionStatus != .enable

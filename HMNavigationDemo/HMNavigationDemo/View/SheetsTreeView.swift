@@ -37,7 +37,7 @@ struct SheetsTreeView: View {
             .sheetBackground(Color.red)
             .sheetDetents(detents: [.medium()])
         }
-        .sheetBackground(Color.blue)
+        .sheetBackground(.regularMaterial)
     }
 }
 

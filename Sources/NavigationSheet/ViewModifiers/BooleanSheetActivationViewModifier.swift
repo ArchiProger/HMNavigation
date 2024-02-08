@@ -14,7 +14,9 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
     
     @EnvironmentObject var sheetModel: SheetViewModel
     @EnvironmentObject var configModel: ConfigurationViewModel
+    
     @Environment(\.sheetController) var controller
+    @Environment(\.colorScheme) var scheme
     @Environment(\.self) var environments
     
     public func body(content: Content) -> some View {
@@ -26,15 +28,12 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
                         guard active != sheetModel.sheetActive else { return }
                         
                         if active {
-                            sheetModel.present(stack: stack,
-                                               configuration: configModel,
-                                               environments: environments,
-                                               content: self.content
-                            )
+                            sheetModel.present(stack: stack, configuration: configModel) {
+                                self.content()
+                                    .environment(\.self, environments)
+                            }
                         } else {
-                            sheetModel.dismiss(stack: stack,
-                                               configuration: configModel
-                            )
+                            sheetModel.dismiss(stack: stack, configuration: configModel)
                         }
                     }
                     .onReceive(
@@ -47,7 +46,7 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
                         
                         sheetActive = active
                     }
-            }
+            }            
     }
     
     // MARK: - Sheet settings
@@ -62,6 +61,9 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
     private func onCreate() {
         guard sheetActive else { return }
         
-        sheetModel.present(stack: stack, configuration: configModel, environments: environments, content: content)
+        sheetModel.present(stack: stack, configuration: configModel) {
+            content()
+                .environment(\.self, environments)
+        }
     }
 }

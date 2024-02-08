@@ -29,23 +29,17 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
                                                configuration: configModel,
                                                shouldChangeNavigationStack: false
                             )
-                            sheetModel.present(stack: stack,
-                                               configuration: configModel,
-                                               environments: environments
-                            ) {
+                            sheetModel.present(stack: stack, configuration: configModel) {
                                 self.content(item)
+                                    .environment(\.self, environments)
                             }
                         } else if let item = newState, !sheetModel.sheetActive {
-                            sheetModel.present(stack: stack,
-                                               configuration: configModel,
-                                               environments: environments
-                            ) {
+                            sheetModel.present(stack: stack, configuration: configModel) {
                                 self.content(item)
+                                    .environment(\.self, environments)
                             }
                         } else {
-                            sheetModel.dismiss(stack: stack,
-                                               configuration: configModel
-                            )
+                            sheetModel.dismiss(stack: stack, configuration: configModel)
                         }
                     }
                     .onReceive(
@@ -73,8 +67,9 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
     private func onCreate() {
         guard let item = item else { return }
         
-        sheetModel.present(stack: stack, configuration: configModel, environments: environments) {
+        sheetModel.present(stack: stack, configuration: configModel) {
             content(item)
+                .environment(\.self, environments)
         }
     }
 }
