@@ -23,7 +23,7 @@ struct SheetsTreeView: View {
             Button("Show red sheet") {
                 redSheetActive.toggle()
             }
-            .tint(.red)
+            .tint(Color.primary)
             .bottomSheet(sheetActive: $redSheetActive) {
                 Button("Show pink sheet") {
                     pinkSheetActive.toggle()

@@ -8,33 +8,20 @@
 import SwiftUI
 import NavigationTabBar
 
-struct ColorSchemeToggle: ViewModifier {
-    
-    @Environment(\.colorScheme) var scheme
-    
-    func body(content: Content) -> some View {
-        content
-            .onChange(of: scheme) { _ in
-                print(scheme)
-            }
-    }
-}
-
 final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, ObservableObject {
     @Published var sheetActive = false
+    @Published var stack = SheetControllersViewModel()
+    @Published var configuration = ConfigurationViewModel()    
     
     // MARK: - Management of the bottom sheet
-    func present(stack: SheetControllersViewModel,
-                 configuration: ConfigurationViewModel,                 
-                 @ViewBuilder content: () -> some View
-    ) {
+    func present(@ViewBuilder content: () -> some View) {
         let controller = UISheetHostingController(            
             rootView: content()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(configuration.backgroundColor)
                 .background(configuration.backgroundContent)
-                .environment(\.sheetDismiss, { self.dismiss(stack: stack, configuration: configuration) })
-                .environment(\.sheetController, stack)                          
+                .environment(\.sheetDismiss, { self.dismiss() })
+                .environment(\.sheetController, stack)
         )
         controller.shadow = configuration.shadow == .default ? nil : configuration.shadow
         controller.view.backgroundColor = .clear
@@ -46,17 +33,13 @@ final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, Obs
         }
         
         let root = stack.presentationControllersStack.last ?? configuration.rootViewController
-                        
         root?.present(controller, animated: true) {
-            stack.presentationControllersStack.append(controller)
+            self.stack.presentationControllersStack.append(controller)
             self.sheetActive = true
         }
     }
     
-    func dismiss(stack: SheetControllersViewModel,
-                 configuration: ConfigurationViewModel,
-                 shouldChangeNavigationStack: Bool = true
-    ) {
+    func dismiss(shouldChangeNavigationStack: Bool = true) {
         let root = stack.presentationControllersStack.last ?? configuration.rootViewController
         
         root?.dismiss(animated: true) {
@@ -64,8 +47,8 @@ final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, Obs
             
             self.sheetActive = false
             
-            if !stack.presentationControllersStack.isEmpty {
-                stack.presentationControllersStack.removeLast()
+            if !self.stack.presentationControllersStack.isEmpty {
+                self.stack.presentationControllersStack.removeLast()
             }
         }
     }
@@ -73,5 +56,9 @@ final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, Obs
     // MARK: - Bottom sheet delegate methods
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         sheetActive = false
+        
+        if !stack.presentationControllersStack.isEmpty {
+            stack.presentationControllersStack.removeLast()
+        }
     }
 }

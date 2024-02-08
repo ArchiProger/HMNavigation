@@ -24,22 +24,18 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
                     .onChange(of: item) { [item] newState in
                         guard item != newState else { return }
                         
-                        if let item = newState, sheetModel.sheetActive {
-                            sheetModel.dismiss(stack: stack,
-                                               configuration: configModel,
-                                               shouldChangeNavigationStack: false
-                            )
-                            sheetModel.present(stack: stack, configuration: configModel) {
-                                self.content(item)
-                                    .environment(\.self, environments)
+                        sheetModel.stack = stack
+                        sheetModel.configuration = configModel
+                        
+                        if let item = newState {
+                            if sheetModel.sheetActive {
+                                sheetModel.dismiss(shouldChangeNavigationStack: false)
                             }
-                        } else if let item = newState, !sheetModel.sheetActive {
-                            sheetModel.present(stack: stack, configuration: configModel) {
-                                self.content(item)
-                                    .environment(\.self, environments)
+                            sheetModel.present {
+                                self.content(item)                                    
                             }
                         } else {
-                            sheetModel.dismiss(stack: stack, configuration: configModel)
+                            sheetModel.dismiss()
                         }
                     }
                     .onReceive(
@@ -67,7 +63,9 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
     private func onCreate() {
         guard let item = item else { return }
         
-        sheetModel.present(stack: stack, configuration: configModel) {
+        sheetModel.stack = stack
+        sheetModel.configuration = configModel
+        sheetModel.present {
             content(item)
                 .environment(\.self, environments)
         }
