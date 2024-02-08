@@ -11,18 +11,20 @@ import NavigationTabBar
 final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, ObservableObject {
     @Published var sheetActive = false
     @Published var stack = SheetControllersViewModel()
-    @Published var configuration = ConfigurationViewModel()    
+    @Published var configuration = ConfigurationViewModel()
+    @Published var environments = EnvironmentValues()
     
     // MARK: - Management of the bottom sheet
-    func present(@ViewBuilder content: () -> some View) {
-        let controller = UISheetHostingController(            
-            rootView: content()
+    func present(@ViewBuilder content: @escaping () -> some View) {
+        let controller = UISheetHostingController {
+            content()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(configuration.backgroundColor)
-                .background(configuration.backgroundContent)
+                .background(self.configuration.backgroundColor)
+                .background(self.configuration.backgroundContent)
                 .environment(\.sheetDismiss, { self.dismiss() })
-                .environment(\.sheetController, stack)
-        )
+                .environment(\.sheetController, self.stack)
+        }
+        controller.environments = environments
         controller.shadow = configuration.shadow == .default ? nil : configuration.shadow
         controller.view.backgroundColor = .clear
         controller.isModalInPresentation = configuration.dismissActionStatus != .enable

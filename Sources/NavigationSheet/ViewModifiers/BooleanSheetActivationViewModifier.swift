@@ -16,6 +16,7 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
     @EnvironmentObject var configModel: ConfigurationViewModel
     
     @Environment(\.sheetController) var controller
+    @Environment(\.self) var environments
     
     public func body(content: Content) -> some View {
         content
@@ -26,12 +27,11 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
                         guard active != sheetModel.sheetActive else { return }
                         
                         sheetModel.stack = stack
-                        sheetModel.configuration = configModel
+                        sheetModel.configuration = configModel    
+                        sheetModel.environments = environments
                         
                         if active {
-                            sheetModel.present {
-                                self.content()
-                            }
+                            sheetModel.present(content: self.content)
                         } else {
                             sheetModel.dismiss()
                         }
@@ -63,8 +63,6 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
         
         sheetModel.stack = stack
         sheetModel.configuration = configModel        
-        sheetModel.present() {
-            content()
-        }
+        sheetModel.present(content: content)
     }
 }

@@ -13,6 +13,7 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
     
     @EnvironmentObject var sheetModel: SheetViewModel
     @EnvironmentObject var configModel: ConfigurationViewModel
+    
     @Environment(\.sheetController) var controller
     @Environment(\.self) var environments
     
@@ -26,6 +27,7 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
                         
                         sheetModel.stack = stack
                         sheetModel.configuration = configModel
+                        sheetModel.environments = environments
                         
                         if let item = newState {
                             if sheetModel.sheetActive {
@@ -65,9 +67,9 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
         
         sheetModel.stack = stack
         sheetModel.configuration = configModel
+        sheetModel.environments = environments
         sheetModel.present {
             content(item)
-                .environment(\.self, environments)
         }
     }
 }
