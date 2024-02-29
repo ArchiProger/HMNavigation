@@ -31,6 +31,7 @@ public final class WindowsAdapter {
         let controller = UIHostingController(
             rootView: content()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: placement)
+                .ignoresSafeArea(.keyboard, edges: .bottom)
         )
         controller.view.backgroundColor = .clear                
         
