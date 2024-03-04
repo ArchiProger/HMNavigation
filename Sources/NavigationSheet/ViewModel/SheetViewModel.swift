@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import NavigationTabBar
+import Navigation
 
 final class SheetViewModel: NSObject, UISheetPresentationControllerDelegate, ObservableObject {
     @Published var sheetActive = false

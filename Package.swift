@@ -14,8 +14,8 @@ let package = Package(
             name: "NavigationSheet",
             targets: ["NavigationSheet"]),
         .library(
-            name: "NavigationTabBar",
-            targets: ["NavigationTabBar"])
+            name: "Navigation",
+            targets: ["Navigation"])
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.1.0"),
@@ -25,13 +25,15 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "NavigationSheet",
-        dependencies: [
-            "NavigationTabBar"
-        ]),
+            dependencies: [
+                "Navigation"
+            ]),
         .target(
-            name: "NavigationTabBar"),
+            name: "Navigation"
+        ),
         .testTarget(
             name: "NavigationSheetTests",
-            dependencies: ["NavigationSheet"]),
+            dependencies: ["NavigationSheet"]
+        ),
     ]
 )

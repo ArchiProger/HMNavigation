@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import NavigationTabBar
+import Navigation
 
 // Create an environment key
 private struct HostingViewController: EnvironmentKey {

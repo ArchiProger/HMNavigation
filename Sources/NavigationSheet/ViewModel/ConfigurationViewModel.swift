@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import NavigationTabBar
+import Navigation
 
 struct UIShadow: Equatable {
     var color: CGColor?
@@ -34,7 +34,7 @@ final class ConfigurationViewModel: ObservableObject {
         let adapter = WindowsAdapter.shared
         
         switch type {
-            case .default: return adapter.tabBar?.rootViewController
+            case .default: return adapter.navigation?.rootViewController
             case .navigation: return adapter.main?.rootViewController
         }
     }
