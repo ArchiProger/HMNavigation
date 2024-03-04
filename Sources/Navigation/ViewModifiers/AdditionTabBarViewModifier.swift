@@ -19,8 +19,6 @@ fileprivate struct AdditionTabBarViewModifier: ViewModifier {
     
     @NavigationBuilder var builder: () -> NavigationTuple
     
-    @State private var tabBarSize: CGSize = .zero
-    
     init(@NavigationBuilder builder: @escaping () -> NavigationTuple) {
         self.builder = builder
         
@@ -28,13 +26,11 @@ fileprivate struct AdditionTabBarViewModifier: ViewModifier {
     }
     
     func body(content: Content) -> some View {
-        content
-            .environment(\.tabBarSize, tabBarSize)
+        content            
             .onAppear(perform: onCreate)            
     }
     
     func onCreate() {
-        let tuple = builder()
-        tabBarSize = tuple.tabBarSize
+        builder()
     }
 }

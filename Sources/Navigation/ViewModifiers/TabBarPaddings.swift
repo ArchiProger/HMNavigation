@@ -15,13 +15,13 @@ extension View {
 }
 
 fileprivate struct TabBarPaddingsViewModifier: ViewModifier {
-    @Environment(\.tabBarSize) var size
-    
     func body(content: Content) -> some View {
         content
             .safeAreaInset(edge: .bottom) {
-                Color.clear
-                    .frame(width: size.width, height: size.height)
-            }                 
+                if let controller = WindowsAdapter.shared.navigation?.rootViewController as? UIHostingController<NavigationTuple> {
+                    controller.rootView
+                        .opacity(0)
+                }
+            }
     }
 }

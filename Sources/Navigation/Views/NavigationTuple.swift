@@ -9,20 +9,23 @@ import SwiftUI
 
 public struct NavigationTuple: View {    
     @State var tabBarSize: CGSize = .zero
-    @State private var x = -UIScreen.main.bounds.width + 65
+    @State private var x: CGFloat = .zero
+    @State private var width: CGFloat = .zero
     
     private var sideMenu = AnyView(EmptyView())
     private var tabBar = AnyView(EmptyView())
-    private var width = UIScreen.main.bounds.width - 65
         
     public var body: some View {
-        tabBar
-            .size { size in
-                tabBarSize = size
-            }
+        tabBar            
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)            
-            .overlay{
+            .overlay {
                 sideMenu
+                    .size { size in
+                        x = -size.width
+                        width = size.width
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .border(Color.red)
                     .offset(x: x)
                     .background(
                         Color.black.opacity(x == 0 ? 0.7 : 0)
@@ -35,16 +38,16 @@ public struct NavigationTuple: View {
                         withAnimation{
                             if value.translation.width > 0 {
                                 x = -width + value.translation.width
-                            }else{
+                            } else{
                                 x = value.translation.width
                             }
                         }
                     }
                     .onEnded { value in
                         withAnimation{
-                            if -x < width/2 {
+                            if -x < width / 2 {
                                 x = 0
-                            }else{
+                            } else{
                                 x = -width
                             }
                         }
