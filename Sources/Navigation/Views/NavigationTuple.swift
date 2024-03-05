@@ -9,50 +9,29 @@ import SwiftUI
 
 public struct NavigationTuple: View {    
     @State var tabBarSize: CGSize = .zero
-    @State private var x: CGFloat = .zero
-    @State private var width: CGFloat = .zero
     
-    private var sideMenu = AnyView(EmptyView())
-    private var tabBar = AnyView(EmptyView())
+    @ObservedObject var sideModel = SideBarViewModel.shared
+    
+    var sideMenu = AnyView(EmptyView())
+    var tabBar = AnyView(EmptyView())
         
     public var body: some View {
         tabBar            
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)            
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             .overlay {
                 sideMenu
                     .size { size in
-                        x = -size.width
-                        width = size.width
+                        sideModel.x = -size.width
+                        sideModel.width = size.width
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .border(Color.red)
-                    .offset(x: x)
+                    .offset(x: sideModel.x)
                     .background(
-                        Color.black.opacity(x == 0 ? 0.7 : 0)
-                            .ignoresSafeArea(.all, edges: .vertical)
+                        Color.black.opacity(sideModel.x == 0 ? 0.7 : 0)
+                            .ignoresSafeArea(.all, edges: .vertical)                
                     )
             }
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        withAnimation{
-                            if value.translation.width > 0 {
-                                x = -width + value.translation.width
-                            } else{
-                                x = value.translation.width
-                            }
-                        }
-                    }
-                    .onEnded { value in
-                        withAnimation{
-                            if -x < width / 2 {
-                                x = 0
-                            } else{
-                                x = -width
-                            }
-                        }
-                    }
-            )
+            .gesture(sideModel.gesture)
             .ignoresSafeArea(.keyboard, edges: .bottom)
     }
     

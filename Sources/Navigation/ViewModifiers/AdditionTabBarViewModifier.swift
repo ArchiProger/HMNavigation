@@ -19,6 +19,8 @@ fileprivate struct AdditionTabBarViewModifier: ViewModifier {
     
     @NavigationBuilder var builder: () -> NavigationTuple
     
+    @ObservedObject var sideModel = SideBarViewModel.shared
+    
     init(@NavigationBuilder builder: @escaping () -> NavigationTuple) {
         self.builder = builder
         
@@ -27,7 +29,8 @@ fileprivate struct AdditionTabBarViewModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content            
-            .onAppear(perform: onCreate)            
+            .onAppear(perform: onCreate)
+            .gesture(sideModel.gesture)
     }
     
     func onCreate() {
