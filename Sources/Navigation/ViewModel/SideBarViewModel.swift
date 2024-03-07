@@ -40,17 +40,13 @@ final class SideBarViewModel: ObservableObject {
         
         $isActive
             .receive(on: RunLoop.main)
-            .removeDuplicates()
-            .sink { value in                
-                withAnimation {
-                    self.position = value ? 0 : -self.width
-                }
-            }
+            .map { $0 ? 0 : -self.width }
+            .assign(to: \.position, on: self)
             .store(in: &cancellable)
     }
     
     var gesture: some Gesture {
-        DragGesture(minimumDistance: 30)
+        DragGesture(minimumDistance: 50)
             .onChanged { value in
                 let width = value.translation.width
                 
