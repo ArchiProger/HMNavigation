@@ -30,8 +30,8 @@ public struct NavigationTuple: View {
                         Color.black.opacity(sideModel.x == 0 ? 0.7 : 0)
                             .ignoresSafeArea(.all, edges: .vertical)                
                     )
+                    .gesture(sideModel.gesture)
             }
-            .gesture(sideModel.gesture)
             .ignoresSafeArea(.keyboard, edges: .bottom)
     }
     
