@@ -25,6 +25,7 @@ final class SideBarViewModel: ObservableObject {
     private var cancellable: Set<AnyCancellable> = []
     
     static let shared = SideBarViewModel()
+    
     private init() {
         $position
             .receive(on: RunLoop.main)
@@ -67,7 +68,7 @@ final class SideBarViewModel: ObservableObject {
     }
     
     var gesture: some Gesture {
-        DragGesture()
+        DragGesture(minimumDistance: 30)
             .onChanged { value in
                 let width = value.translation.width
                 
