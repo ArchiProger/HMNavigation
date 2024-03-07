@@ -38,30 +38,12 @@ final class SideBarViewModel: ObservableObject {
             }
             .store(in: &cancellable)
         
-        $position
-            .dropFirst()
-            .receive(on: RunLoop.main)
-            .removeDuplicates()
-            .map { !($0 == -self.width) }
-            .filter { $0 == true }
-            .assign(to: \.isActive, on: self)
-            .store(in: &cancellable)
-        
-        $position
-            .dropFirst()
-            .receive(on: RunLoop.main)
-            .removeDuplicates()
-            .map { $0 == 0 }
-            .filter { $0 == false }
-            .assign(to: \.isActive, on: self)
-            .store(in: &cancellable)
-        
         $isActive
-            .debounce(for: 0.2, scheduler: RunLoop.main)
+            .receive(on: RunLoop.main)
             .removeDuplicates()
-            .sink { value in
+            .sink { value in                
                 withAnimation {
-                    self.x = value ? 0 : -self.width
+                    self.position = value ? 0 : -self.width
                 }
             }
             .store(in: &cancellable)
@@ -86,12 +68,9 @@ final class SideBarViewModel: ObservableObject {
                 }
             }
             .onEnded { value in
-                if -self.position < self.width / 2 {
-                    self.position = 0
-                } else{
-                    self.position = -self.width
-                }
+                let condition = -self.position < self.width / 2
                 
+                self.isActive = condition
                 self.direction = nil
             }
     }
