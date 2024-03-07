@@ -31,6 +31,9 @@ public struct NavigationTuple: View {
                             .ignoresSafeArea(.all, edges: .vertical)                
                     )
                     .gesture(sideModel.gesture)
+                    .onTapGesture {
+                        sideModel.isActive = false
+                    }
             }
             .ignoresSafeArea(.keyboard, edges: .bottom)
     }
