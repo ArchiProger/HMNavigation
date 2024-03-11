@@ -46,9 +46,13 @@ final class SideBarViewModel: ObservableObject {
     }
     
     var gesture: some Gesture {
-        DragGesture(minimumDistance: 50)
+        let distanceRestriction: CGFloat = 50
+        
+        return DragGesture(minimumDistance: distanceRestriction)
             .onChanged { value in
                 let width = value.translation.width
+                
+                guard width >= distanceRestriction else { return }
                 
                 if self.direction == nil {
                     self.direction = width > 0 ? .right : .left
