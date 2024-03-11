@@ -52,7 +52,7 @@ final class SideBarViewModel: ObservableObject {
             .onChanged { value in
                 let width = value.translation.width
                 
-                guard width >= distanceRestriction else { return }
+                guard abs(width) >= distanceRestriction else { return }
                 
                 if self.direction == nil {
                     self.direction = width > 0 ? .right : .left
