@@ -28,8 +28,7 @@ final class SideBarViewModel: ObservableObject {
     
     private init() {
         $position
-            .receive(on: RunLoop.main)
-            .removeDuplicates()
+            .receive(on: RunLoop.main)            
             .filter { (-self.width...0).contains($0) }
             .sink { value in
                 withAnimation {
