@@ -28,13 +28,13 @@ public struct NavigationTuple: View {
                     .offset(x: sideModel.x)
                     .background(
                         Color.black.opacity(sideModel.x == 0 ? 0.7 : 0)
-                            .ignoresSafeArea(.all, edges: .vertical)                
+                            .ignoresSafeArea(.all, edges: .vertical)
+                            .onTapGesture {
+                                sideModel.isActive = false
+                            }
                     )
                     .disabled(sideModel.direction != nil)
                     .gesture(sideModel.gesture)
-                    .onTapGesture {
-                        sideModel.isActive = false
-                    }
             }
             .ignoresSafeArea(.keyboard, edges: .bottom)
     }
