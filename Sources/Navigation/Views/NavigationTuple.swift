@@ -30,6 +30,7 @@ public struct NavigationTuple: View {
                         Color.black.opacity(sideModel.x == 0 ? 0.7 : 0)
                             .ignoresSafeArea(.all, edges: .vertical)                
                     )
+                    .disabled(sideModel.direction != nil)
                     .gesture(sideModel.gesture)
                     .onTapGesture {
                         sideModel.isActive = false

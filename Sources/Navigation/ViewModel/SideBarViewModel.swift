@@ -19,8 +19,8 @@ final class SideBarViewModel: ObservableObject {
     @Published var width: CGFloat = .zero
     @Published var x: CGFloat = .zero
     
+    @Published private(set) var direction: GestureDirection? = nil
     @Published private var position: CGFloat = .zero
-    @Published private var direction: GestureDirection? = nil
     
     private var cancellable: Set<AnyCancellable> = []
     
