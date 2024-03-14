@@ -21,10 +21,10 @@ fileprivate struct NavigationInsertViewModifier: ViewModifier {
     
     @ObservedObject var sideModel = SideBarViewModel.shared
     
-    init(@NavigationBuilder builder: @escaping () -> NavigationTuple) {
+    init(defaultTabBarDisabled: Bool = true, @NavigationBuilder builder: @escaping () -> NavigationTuple) {
         self.builder = builder
         
-        UITabBar.appearance().isHidden = true
+        UITabBar.appearance().isHidden = defaultTabBarDisabled
     }
     
     func body(content: Content) -> some View {
