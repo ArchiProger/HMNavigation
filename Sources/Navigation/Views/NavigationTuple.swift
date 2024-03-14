@@ -36,6 +36,7 @@ public struct NavigationTuple: View {
                     .disabled(sideModel.direction != nil)
                     .gesture(sideModel.gesture)
             }
+            .environment(\.sideMenuStatus, sideModel.isActive ? .active : .inactive)
             .ignoresSafeArea(.keyboard, edges: .bottom)
     }
     
