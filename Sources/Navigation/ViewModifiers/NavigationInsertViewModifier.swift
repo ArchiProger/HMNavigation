@@ -9,9 +9,9 @@ import SwiftUI
 
 extension View {
     @ViewBuilder
-    public func navigationInsert(@NavigationBuilder builder: @escaping () -> NavigationTuple) -> some View {
+    public func navigationInsert(defaultTabBarDisabled: Bool = true, @NavigationBuilder builder: @escaping () -> NavigationTuple) -> some View {
         self
-            .modifier(NavigationInsertViewModifier(builder: builder))
+            .modifier(NavigationInsertViewModifier(defaultTabBarDisabled: defaultTabBarDisabled, builder: builder))
     }
 }
 
@@ -21,7 +21,7 @@ fileprivate struct NavigationInsertViewModifier: ViewModifier {
     
     @ObservedObject var sideModel = SideBarViewModel.shared
     
-    init(defaultTabBarDisabled: Bool = true, @NavigationBuilder builder: @escaping () -> NavigationTuple) {
+    init(defaultTabBarDisabled: Bool, @NavigationBuilder builder: @escaping () -> NavigationTuple) {
         self.builder = builder
         
         UITabBar.appearance().isHidden = defaultTabBarDisabled
