@@ -15,6 +15,7 @@ enum GestureDirection {
 
 final class SideBarViewModel: ObservableObject {
     @Published var isActive = false
+    @Published var isGesture = true
     
     @Published var width: CGFloat = .zero
     @Published var x: CGFloat = .zero
@@ -46,12 +47,12 @@ final class SideBarViewModel: ObservableObject {
     
     var gesture: some Gesture {
         let distanceRestriction: CGFloat = 50
-        
+                        
         return DragGesture(minimumDistance: distanceRestriction)
             .onChanged { value in
                 let width = value.translation.width
                 
-                guard abs(width) >= distanceRestriction else { return }
+                guard abs(width) >= distanceRestriction, self.isGesture else { return }
                 
                 if self.direction == nil {
                     self.direction = width > 0 ? .right : .left
@@ -67,6 +68,8 @@ final class SideBarViewModel: ObservableObject {
                 }
             }
             .onEnded { value in
+                guard self.isGesture else { return }
+                
                 let condition = -self.position < self.width / 2
                 
                 self.isActive = condition

@@ -19,7 +19,7 @@ fileprivate struct TabBarPaddingsViewModifier: ViewModifier {
         content
             .safeAreaInset(edge: .bottom) {
                 if let controller = WindowsAdapter.shared.navigation?.rootViewController as? UIHostingController<NavigationTuple> {
-                    controller.rootView
+                    controller.rootView.tabBar
                         .opacity(0)
                 }
             }

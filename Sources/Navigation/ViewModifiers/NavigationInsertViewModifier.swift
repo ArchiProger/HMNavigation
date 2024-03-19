@@ -13,6 +13,17 @@ extension View {
         self
             .modifier(NavigationInsertViewModifier(defaultTabBarDisabled: defaultTabBarDisabled, builder: builder))
     }
+    
+    @ViewBuilder
+    public func navigationGesture(_ enable: Bool = true) -> some View {
+        self
+            .onAppear {
+                SideBarViewModel.shared.isGesture = enable
+            }
+            .onDisappear {
+                SideBarViewModel.shared.isGesture = !enable
+            }
+    }
 }
 
 fileprivate struct NavigationInsertViewModifier: ViewModifier {
