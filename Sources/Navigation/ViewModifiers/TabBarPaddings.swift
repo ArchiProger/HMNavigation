@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  TabBarPaddingsViewModifier.swift
+//
 //
 //  Created by Archibbald on 23.01.2024.
 //
@@ -15,13 +15,13 @@ extension View {
 }
 
 fileprivate struct TabBarPaddingsViewModifier: ViewModifier {
+    @Environment(\.tabBarSize) var size
+    
     func body(content: Content) -> some View {
         content
             .safeAreaInset(edge: .bottom) {
-                if let controller = WindowsAdapter.shared.navigation?.rootViewController as? UIHostingController<NavigationTuple> {
-                    controller.rootView.tabBar
-                        .opacity(0)
-                }
+                Color.clear
+                    .frame(width: size.width, height: size.height)
             }
     }
 }

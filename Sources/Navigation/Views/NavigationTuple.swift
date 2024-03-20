@@ -7,36 +7,37 @@
 
 import SwiftUI
 
-public struct NavigationTuple: View {    
-    @State var tabBarSize: CGSize = .zero
-    
-    @ObservedObject var sideModel = SideBarViewModel.shared
+public struct NavigationTuple: View {            
+    @ObservedObject var navigationModel = NavigationViewModel.shared
     
     var sideMenu = AnyView(EmptyView())
     var tabBar = AnyView(EmptyView())
         
     public var body: some View {
-        tabBar            
+        tabBar   
+            .size { size in
+                navigationModel.tabBarSize = size
+            }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             .overlay {
                 sideMenu
                     .size { size in
-                        sideModel.x = -size.width
-                        sideModel.width = size.width
+                        navigationModel.x = -size.width
+                        navigationModel.width = size.width
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .offset(x: sideModel.x)
+                    .offset(x: navigationModel.x)
                     .background(
-                        Color.black.opacity(sideModel.x == 0 ? 0.7 : 0)
+                        Color.black.opacity(navigationModel.x == 0 ? 0.7 : 0)
                             .ignoresSafeArea(.all, edges: .vertical)
                             .onTapGesture {
-                                sideModel.isActive = false
+                                navigationModel.isActive = false
                             }
                     )
-                    .disabled(sideModel.direction != nil)
-                    .gesture(sideModel.gesture)                    
+                    .disabled(navigationModel.direction != nil)
+                    .gesture(navigationModel.gesture)                    
             }
-            .environment(\.sideMenuStatus, sideModel.isActive ? .active : .inactive)
+            .environment(\.sideMenuStatus, navigationModel.isActive ? .active : .inactive)
             .ignoresSafeArea(.keyboard, edges: .bottom)
     }
     

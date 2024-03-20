@@ -18,10 +18,10 @@ extension View {
     public func navigationGesture(_ enable: Bool = true) -> some View {
         self
             .onAppear {
-                SideBarViewModel.shared.isGesture = enable
+                NavigationViewModel.shared.isGesture = enable
             }
             .onDisappear {
-                SideBarViewModel.shared.isGesture = !enable
+                NavigationViewModel.shared.isGesture = !enable
             }
     }
 }
@@ -30,7 +30,7 @@ fileprivate struct NavigationInsertViewModifier: ViewModifier {
     
     @NavigationBuilder var builder: () -> NavigationTuple
     
-    @ObservedObject var sideModel = SideBarViewModel.shared
+    @ObservedObject var navigationModel = NavigationViewModel.shared
     
     init(defaultTabBarDisabled: Bool, @NavigationBuilder builder: @escaping () -> NavigationTuple) {
         self.builder = builder
@@ -39,13 +39,14 @@ fileprivate struct NavigationInsertViewModifier: ViewModifier {
     }
     
     func body(content: Content) -> some View {
-        content            
-            .environment(\.sideMenuStatus, sideModel.isActive ? .active : .inactive)
+        content          
+            .environment(\.tabBarSize, navigationModel.tabBarSize)
+            .environment(\.sideMenuStatus, navigationModel.isActive ? .active : .inactive)
             .onAppear(perform: onCreate)
-            .gesture(sideModel.gesture)
+            .gesture(navigationModel.gesture)
     }
     
     func onCreate() {
-        builder()
+        let _ = builder()
     }
 }

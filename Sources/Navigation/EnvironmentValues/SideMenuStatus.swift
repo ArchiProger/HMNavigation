@@ -12,7 +12,7 @@ public enum SideMenuStatus {
     case active, inactive
     
     public func toggle() {
-        SideBarViewModel.shared.isActive.toggle()
+        NavigationViewModel.shared.isActive.toggle()
     }
 }
 

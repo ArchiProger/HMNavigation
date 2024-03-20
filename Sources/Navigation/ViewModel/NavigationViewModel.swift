@@ -13,19 +13,21 @@ enum GestureDirection {
     case left, right
 }
 
-final class SideBarViewModel: ObservableObject {
+final class NavigationViewModel: ObservableObject {
     @Published var isActive = false
     @Published var isGesture = true
     
     @Published var width: CGFloat = .zero
     @Published var x: CGFloat = .zero
     
+    @Published var tabBarSize: CGSize = .zero
+    
     @Published private(set) var direction: GestureDirection? = nil
     @Published private var position: CGFloat = .zero
     
     private var cancellable: Set<AnyCancellable> = []
     
-    static let shared = SideBarViewModel()
+    static let shared = NavigationViewModel()
     
     private init() {
         $position
