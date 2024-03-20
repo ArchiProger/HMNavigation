@@ -15,13 +15,13 @@ extension View {
 }
 
 fileprivate struct TabBarPaddingsViewModifier: ViewModifier {
-    @Environment(\.tabBarSize) var size
+    @StateObject private var navigationModel = NavigationViewModel.shared
     
     func body(content: Content) -> some View {
         content
             .safeAreaInset(edge: .bottom) {
                 Color.clear
-                    .frame(width: size.width, height: size.height)
+                    .frame(height: navigationModel.tabBarSize.height)
             }
     }
 }
