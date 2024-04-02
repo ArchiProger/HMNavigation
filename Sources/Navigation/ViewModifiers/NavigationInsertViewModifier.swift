@@ -32,6 +32,8 @@ fileprivate struct NavigationInsertViewModifier: ViewModifier {
     
     @ObservedObject var navigationModel = NavigationViewModel.shared
     
+    @Environment(\.self) var environments
+    
     init(defaultTabBarDisabled: Bool, @NavigationBuilder builder: @escaping () -> NavigationTuple) {
         self.builder = builder
         
@@ -47,6 +49,15 @@ fileprivate struct NavigationInsertViewModifier: ViewModifier {
     }
     
     func onCreate() {
-        let _ = builder()
+        guard
+            let root =  WindowsAdapter.shared.navigation?.rootViewController,
+            let controller = root as? UIHostingController<AnyView>
+        else { return }
+        
+        let tuple = builder()
+        let view = tuple
+            .environment(\.self, environments)
+        
+        controller.rootView = .init(view)
     }
 }

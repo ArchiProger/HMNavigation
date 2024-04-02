@@ -11,15 +11,10 @@ import SwiftUI
 @resultBuilder
 public struct NavigationBuilder {
     public static func buildBlock(_ components: (any NavigationContent)...) -> NavigationTuple {
-        guard
-            let root =  WindowsAdapter.shared.navigation?.rootViewController,
-            let controller = root as? UIHostingController<NavigationTuple>
-        else { return .init() }
+        var view = NavigationTuple()
         
         for component in components {
-            let view = controller.rootView
-            
-            controller.rootView = switch component.placement {
+            view = switch component.placement {
                 case .tabBar:
                      view.placeBottomBar { AnyView(component.body) }
                 case .sideMenu:
@@ -27,7 +22,7 @@ public struct NavigationBuilder {
             }
         }                
                 
-        return controller.rootView
+        return view
     }
     
     public static func buildEither(first component: any NavigationContent) -> NavigationTuple {

@@ -27,8 +27,8 @@ public final class WindowsAdapter {
         navigation?.isHidden = false
     }
     
-    private var navigationController: UIHostingController<NavigationTuple> {
-        let controller = UIHostingController(rootView: NavigationTuple())
+    private var navigationController: UIHostingController<AnyView> {
+        let controller = UIHostingController(rootView: AnyView(EmptyView()))
         controller.view.backgroundColor = .clear
         
         return controller
