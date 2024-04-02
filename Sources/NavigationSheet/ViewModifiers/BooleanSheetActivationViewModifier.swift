@@ -54,7 +54,8 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
         guard sheetActive else { return }
         
         sheetModel.controller = controller ?? configModel.rootViewController
-        sheetModel.configuration = configModel        
+        sheetModel.configuration = configModel  
+        sheetModel.environments = environments
         sheetModel.present(content: content)
     }
 }
