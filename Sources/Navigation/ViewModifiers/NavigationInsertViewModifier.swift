@@ -41,14 +41,15 @@ fileprivate struct NavigationInsertViewModifier: ViewModifier {
     }
     
     func body(content: Content) -> some View {
-        content          
+        let _ = prepare()
+        
+        content
             .environment(\.tabBarSize, navigationModel.tabBarSize)
             .environment(\.sideMenuStatus, navigationModel.isActive ? .active : .inactive)
-            .onAppear(perform: onCreate)
             .gesture(navigationModel.gesture)
     }
     
-    func onCreate() {
+    func prepare() {
         guard
             let root =  WindowsAdapter.shared.navigation?.rootViewController,
             let controller = root as? UIHostingController<AnyView>
