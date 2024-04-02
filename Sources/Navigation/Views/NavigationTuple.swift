@@ -22,8 +22,10 @@ public struct NavigationTuple: View {
             .overlay {
                 sideMenu
                     .size { size in
-                        navigationModel.x = -size.width
-                        navigationModel.width = size.width
+                        if navigationModel.width != size.width {
+                            navigationModel.x = -size.width
+                            navigationModel.width = size.width
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .offset(x: navigationModel.x)
