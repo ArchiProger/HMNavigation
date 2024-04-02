@@ -22,7 +22,7 @@ public struct NavigationTuple: View {
             .overlay {
                 sideMenu
                     .size { size in
-                        if navigationModel.width != size.width {
+                        if abs(navigationModel.width - size.width) > 10 {
                             navigationModel.x = -size.width
                             navigationModel.width = size.width
                         }
