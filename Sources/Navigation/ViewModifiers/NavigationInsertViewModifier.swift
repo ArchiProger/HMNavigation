@@ -30,7 +30,7 @@ fileprivate struct NavigationInsertViewModifier: ViewModifier {
     
     @NavigationBuilder var builder: () -> NavigationTuple
     
-    @ObservedObject var navigationModel = NavigationViewModel.shared
+    @StateObject var navigationModel = NavigationViewModel.shared
     
     @Environment(\.self) var environments
     

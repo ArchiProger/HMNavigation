@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct NavigationTuple: View {            
-    @ObservedObject var navigationModel = NavigationViewModel.shared
+    @StateObject var navigationModel = NavigationViewModel.shared
     
     var sideMenu = AnyView(EmptyView())
     var tabBar = AnyView(EmptyView())
