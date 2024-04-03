@@ -44,9 +44,9 @@ fileprivate struct NavigationInsertViewModifier: ViewModifier {
         let _ = prepare()
         
         content
-            .environment(\.tabBarSize, navigationModel.tabBarSize)
+            .onAppear(perform: prepare)            
             .environment(\.sideMenuStatus, navigationModel.isActive ? .active : .inactive)
-            .gesture(navigationModel.gesture)
+            .gesture(navigationModel.gesture)        
     }
     
     func prepare() {

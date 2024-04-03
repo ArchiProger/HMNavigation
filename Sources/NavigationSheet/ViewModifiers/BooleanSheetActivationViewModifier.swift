@@ -19,6 +19,8 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
     @Environment(\.self) var environments
     
     public func body(content: Content) -> some View {
+        let _ = update()
+        
         content
             .background {
                 Color.clear
@@ -57,5 +59,9 @@ public struct BooleanSheetActivationViewModifier<SheetContent: View>: ViewModifi
         sheetModel.configuration = configModel  
         sheetModel.environments = environments
         sheetModel.present(content: content)
+    }
+    
+    private func update() {
+        sheetModel.hostingController?.rootView = sheetModel.prepare(content: content)
     }
 }

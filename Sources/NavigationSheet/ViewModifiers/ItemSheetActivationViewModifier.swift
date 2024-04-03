@@ -18,6 +18,8 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
     @Environment(\.self) var environments
     
     public func body(content: Content) -> some View {
+        let _ = update()
+        
         content
             .background {
                 Color.clear
@@ -62,6 +64,14 @@ public struct ItemSheetActivationViewModifier<Item: Equatable, SheetContent: Vie
         sheetModel.environments = environments
         sheetModel.present {
             content(item)
+        }
+    }
+    
+    private func update() {
+        if let item {
+            sheetModel.hostingController?.rootView = sheetModel.prepare {
+                self.content(item)
+            }
         }
     }
 }
